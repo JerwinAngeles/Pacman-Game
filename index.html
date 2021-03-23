@@ -1,0 +1,551 @@
+<html>
+<head>
+    <title>Pacman Demo</title>
+    <style type="text/css">
+
+        body{
+            background-color: black;
+            margin: 0px;
+        }
+
+        div.row div{
+            width: 20px;
+            height: 20px;
+            display:inline-block;
+        }
+
+        div.brick{
+            background-image: url('wall red.png') ;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover; 
+        }
+
+        div.coin{
+            background: url('Coin.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;   
+        }
+
+        div#pacman{
+            background: url('pacmanRight.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+
+        div#redGhost{
+            background: url('redGhost.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+
+        div#blueGhost{
+            background: url('blueGhost.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+
+        div#pinkGhost{
+            background: url('pinkGhost.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+
+
+        div#score{
+            width: 40px;
+            height: 20px;
+            color: white;
+            border: 1px solid white;
+            text-align: center;
+            padding: 2px;
+            position: absolute;
+            border-radius: 5px;
+            top: 630px;
+            left: 240px;
+        }
+        
+        div.cherry{
+            background: url('cherry.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        div#scoreTitle{
+            width: 40px;
+            height: 20px;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            position: absolute;
+            top: 610px;
+            left: 239px;
+        }
+
+        
+
+    </style>
+</head>
+
+<body>
+    
+    <div id='world'></div>
+    <div id='scoreTitle'>Score:</div>
+    <div id='score'>0</div>
+    <div id='container'>
+    <div id='pacman'></div>
+    </div>
+
+    <div id="redGhost"></div>
+    <div id="blueGhost"></div>
+    <div id="pinkGhost"></div>
+    
+
+
+    <script>
+
+        function randomWorldGenerator(){
+
+            var random = (Math.floor(Math.random()*5))+1;
+            if(random == 1){
+                var world1 = [
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,3,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,3,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,3,2,2,3,2,2,2,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,0,0,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,0,0,0,0,0,0,2,1,2,2,1,2,2,2,2,2,2],
+                    [0,3,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,3,0],  // y=14  
+                    [2,2,2,2,2,2,1,2,2,1,2,0,0,0,0,0,0,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,3,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,3,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,2,2,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,2,2,1,1,1,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+                ];
+                return world1;
+            }
+
+            else if(random == 2){
+                var world2 = [
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,3,2,2,3,0,3,2,2,3,1,1,2,2,1,1,3,2,3,1,0,1,3,2,3,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,3,1,1,1,1,3,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,2,1,3,2,2,1,1,1,1,2,2,1,1,1,1,2,2,3,1,2,1,1,1,2],
+                    [2,2,1,2,2,2,0,2,2,2,2,2,1,2,2,1,2,2,2,2,2,0,2,2,2,1,2,2],
+                    [2,2,1,2,2,2,0,2,2,2,2,2,1,2,2,1,2,2,2,2,2,0,2,2,2,1,2,2],
+                    [2,2,1,2,2,2,0,2,2,3,1,1,1,1,1,1,1,1,3,2,2,0,2,2,2,1,2,2],
+                    [2,3,1,3,2,2,0,2,3,1,2,2,2,0,0,2,2,2,1,3,2,0,2,2,3,1,3,2],
+                    [2,2,1,2,2,2,0,2,2,1,2,0,0,0,0,0,0,2,1,2,2,0,2,2,2,1,2,2],
+                    [0,0,0,0,0,0,0,1,1,1,2,0,0,0,0,0,0,2,1,1,1,0,0,0,0,0,0,0],  // y=14  
+                    [2,2,1,2,2,2,0,2,2,1,2,0,0,0,0,0,0,2,1,2,2,0,2,2,2,1,2,2],
+                    [2,2,1,2,2,2,0,2,2,1,2,2,2,2,2,2,2,2,1,2,2,0,2,2,2,1,2,2],
+                    [2,2,1,2,2,2,0,2,2,1,1,1,1,1,1,1,1,1,1,2,2,0,2,2,2,1,2,2],
+                    [2,2,1,2,2,2,0,2,2,1,2,2,2,2,2,2,2,2,1,2,2,0,2,2,2,1,2,2],
+                    [2,2,1,2,2,2,0,2,2,1,2,2,2,2,2,2,2,2,1,2,2,0,2,2,2,1,2,2],
+                    [2,1,1,1,1,1,3,1,1,3,1,1,1,2,2,1,1,1,3,1,1,3,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,2,2,1,3,1,1,1,1,1,0,0,1,1,1,1,1,3,1,2,2,1,1,1,2],
+                    [2,2,2,1,2,2,3,2,2,1,2,2,2,2,2,2,2,2,1,2,2,3,2,2,1,2,2,2],
+                    [2,2,2,1,2,2,2,2,2,1,2,2,2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,2],
+                    [2,3,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,3,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,2,3,2,2,2,2,1,2,2,1,2,2,2,2,3,2,2,2,2,2,1,2],
+                    [2,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,2],
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+                ];
+                return world2;
+            }
+
+            else if(random == 3){
+            var world3 = [
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,2,2,2,3,2,2,1,2,2,1,2,2,3,2,2,2,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,3,3,3,3,2,2,1,2,2,1,2,2,3,3,3,3,2,2,2,2,1,2],
+                    [2,1,2,2,3,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,3,2,2,1,2],
+                    [2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,3,2,2,3,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,3,1,1,1,1,1,2,2,1,2,2,2,0,0,2,2,2,1,2,2,1,1,1,1,1,3,2],
+                    [2,2,2,2,2,2,2,2,2,1,2,0,0,0,0,0,0,2,1,2,2,2,2,2,2,2,2,2],
+                    [3,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,3], // y=14  
+                    [2,2,2,2,2,2,2,2,2,1,2,0,0,0,0,0,0,2,1,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,2,2,1,2,2,1,1,1,1,0,0,1,1,1,1,2,2,1,2,2,1,1,1,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,2,2,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,2,2,2],
+                    [2,1,1,1,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,1,1,1,2],
+                    [2,1,2,2,2,2,2,2,3,1,1,1,1,2,2,1,1,1,1,3,2,2,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+            ]
+            return world3;
+            }
+
+            else if(random == 4){
+            var world4 = [
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,3,2,2,2,2,3,2,2,2,2,2,3,2,2,3,2,2,2,2,2,3,2,2,2,2,3,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,3,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,3,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,3,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,0,0,2,2,2,1,2,2,1,2,2,3,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,0,0,0,0,0,0,2,1,2,2,1,2,2,3,2,2,2],
+                    [3,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,3], // y=14  
+                    [2,2,2,2,2,2,1,2,2,1,2,0,0,0,0,0,0,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,2,2,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,2,2,1,1,1,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,0,3,3,3,3,3,3,3,0,2,2,1,2,2,1,2,2,3,3,3,3,3,3,3,2,1,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+            ]
+            return world4;
+            }
+
+            else if(random == 5){
+            var world5 = [
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,3,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,3,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,3,2,2,2,2,2,1,2,2,1,2,2,2,2,2,3,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,0,0,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,0,0,0,0,0,0,2,1,2,2,1,2,2,2,2,2,2],
+                    [3,1,1,1,3,1,1,1,1,1,2,0,0,0,0,0,0,2,1,1,1,1,1,3,1,1,1,3], // y=14  
+                    [2,2,2,2,2,2,1,2,2,1,2,0,0,0,0,0,0,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2],
+                    [2,1,1,1,1,1,3,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,3,1,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,2],
+                    [2,1,1,1,2,2,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,2,2,1,1,1,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,2,2,2],
+                    [2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2],
+                    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,2],
+                    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+            ]
+            return world5;
+            }
+
+            
+        }
+
+        var world = randomWorldGenerator();
+
+        var pacman = {
+            y:23,
+            x:14
+        }
+
+        var redGhost = {
+            y:14,
+            x:14
+        }
+
+        var blueGhost = {
+            y:14,
+            x:15
+        }
+
+        var pinkGhost = {
+            y:14,
+            x:13
+        }
+        var score = 0;
+
+        function displayWorld(){
+            var output = '';
+            for(var i=0; i<world.length; i++){
+                output += "\n<div class='row'>";
+                for(var j=0; j<world[i].length;j++){
+                    if(world[i][j]==2){
+                        output+= "<div class='brick'></div>";
+                    }
+                    else if(world[i][j]==1){
+                        output+= "<div class='coin'></div>";
+                    }
+                    else if(world[i][j]==0){
+                        output+= "<div class='empty'></div>";
+                    }
+                    else if(world[i][j]==3){
+                        output+= "<div class='cherry'></div>";
+                    }
+                   
+                }
+                output+= "\n</div>";
+            }
+            
+            document.getElementById("world").innerHTML = output;
+        }
+
+        var direction = 'Right';
+
+        function displayPacman(){
+            document.getElementById('pacman').style.top = pacman.y*20+'px';
+            document.getElementById('pacman').style.left = pacman.x*20+'px';
+            document.getElementById('pacman').style.backgroundImage = "url('pacman"+direction+".gif')";
+        }
+
+        function displayRedGhost(){
+            document.getElementById('redGhost').style.top = redGhost.y*20+'px';
+            document.getElementById('redGhost').style.left = redGhost.x*20+'px';
+            document.getElementById('redGhost').style.backgroundImage = "url('redGhost.gif')";
+        }
+
+        function displayBlueGhost(){
+            document.getElementById('blueGhost').style.top = blueGhost.y*20+'px';
+            document.getElementById('blueGhost').style.left = blueGhost.x*20+'px';
+            document.getElementById('blueGhost').style.backgroundImage = "url('blueGhost.gif')";
+        }
+
+        function displayPinkGhost(){
+            document.getElementById('pinkGhost').style.top = pinkGhost.y*20+'px';
+            document.getElementById('pinkGhost').style.left = pinkGhost.x*20+'px';
+            document.getElementById('pinkGhost').style.backgroundImage = "url('pinkGhost.gif')";
+        }
+
+        function displayScore(){
+            document.getElementById('score').innerHTML = score;   
+        }
+
+        displayWorld();
+        displayPacman(); 
+        displayScore();
+        displayScore();
+        displayRedGhost();
+        displayBlueGhost();
+        displayPinkGhost();
+       
+
+        document.onkeydown = function(e){
+            if(e.keyCode == 38 && world[pacman.y-1][pacman.x] != 2){ //UP Pacman
+                pacman.y--;
+                direction = 'Up';
+            }
+            else if(e.keyCode == 40 && world[pacman.y+1][pacman.x] != 2 ){ //Down Pacman
+                pacman.y++;
+                direction = 'Down';
+            }
+            else if(e.keyCode == 37 && world[pacman.y][pacman.x-1] != 2 ){ //Left Pacman
+                pacman.x --;
+                direction = 'Left';
+                
+                if(world[pacman.y][pacman.x] == world[14][-1]){ //Teleport to Left Pacman
+                    pacman.y = 14;
+                    pacman.x = 27;
+                }
+                
+            }
+            else if(e.keyCode == 39 && world[pacman.y][pacman.x+1] != 2 ){ //Right Pacman
+                pacman.x ++;
+                direction = 'Right';
+
+                if(world[pacman.y][pacman.x] == world[14][29]){ //Teleport to Right Pacman
+                    pacman.y = 14;
+                    pacman.x = 0;
+                }
+            }
+           
+
+            if(world[pacman.y][pacman.x] == 1){ //coins
+                world[pacman.y][pacman.x] = 0;
+                score +=10;
+                displayWorld();
+                displayScore();
+            }
+            else if(world[pacman.y][pacman.x] == 3){ //cherry
+                world[pacman.y][pacman.x] = 0;
+                score+=20;
+                displayWorld();
+                displayScore();
+            }
+
+
+            if(e.keyCode == 116){ //to randomize the World
+                randomWorldGenerator();
+            }
+
+            displayPacman();
+            
+              
+        }
+
+
+        var redGhostInterval = setInterval(redGhostTrigger,50);
+        function redGhostTrigger(){
+            if(pacman.y < redGhost.y && (pacman.x <= redGhost.x || pacman.x >= redGhost.x ) && world[redGhost.y-1][redGhost.x] != 2){ // UP movement Red Ghost
+                redGhost.y--;
+            }
+            else if(pacman.y > redGhost.y && (pacman.x <= redGhost.x || pacman.x >= redGhost.x) && world[redGhost.y+1][redGhost.x] !=2){ // Down movement Red Ghost
+                redGhost.y++;
+            }
+            else if( (pacman.y <= redGhost.y || pacman.y >= redGhost.y) && pacman.x > redGhost.x && world[redGhost.y][redGhost.x-1] !=2){ // Left movement Red Ghost
+                redGhost.x--;
+                if(world[redGhost.y][redGhost.x] == world[14][-1]){ //Teleport to Left Red Ghost
+                    redGhost.y = 14;
+                    redGhost.x = 27;
+                }
+                
+            }
+            else if( (pacman.y <= redGhost.y || pacman.y >= redGhost.y) && pacman.x < redGhost.y && world[redGhost.y][redGhost.x+1] !=2){ // Rigth movement Red Ghost
+                redGhost.x++;
+                if(world[redGhost.y][redGhost.x] == world[14][29]){ //Teleport to Left Red Ghost
+                    redGhost.y = 14;
+                    redGhost.x = 0;
+                }
+            }
+            displayRedGhost(); 
+           
+        }
+
+
+
+
+        var blueGhostInterval = setInterval(blueGhostTrigger,250);
+        function blueGhostTrigger(){
+            var blueGhostStep = Math.floor(Math.random()*4)+1;
+            if(blueGhostStep == 1 && world[blueGhost.y-1][blueGhost.x] != 2){ // UP movement Red Ghost
+                blueGhost.y--;
+            }
+            else if(blueGhostStep == 2 && world[blueGhost.y+1][blueGhost.x] !=2){ // Down movement Red Ghost
+                blueGhost.y++;
+            }
+            else if(blueGhostStep == 3 && world[blueGhost.y][blueGhost.x-1] !=2){ // Left movement Red Ghost
+                blueGhost.x--;
+                if(world[blueGhost.y][blueGhost.x] == world[14][-1]){ //Teleport to Left Pacman
+                    blueGhost.y = 14;
+                    blueGhost.x = 27;
+                }
+                
+            }
+            else if(blueGhostStep == 4 && world[blueGhost.y][blueGhost.x+1] !=2){ // Rigth movement Red Ghost
+                blueGhost.x++;
+                if(world[blueGhost.y][blueGhost.x] == world[14][29]){ //Teleport to Left Red Ghost
+                    blueGhost.y = 14;
+                    blueGhost.x = 0;
+                }
+            }
+            displayBlueGhost(); 
+           
+        }
+
+        var pinkGhostInterval = setInterval(pinkGhostTrigger,250);
+        function pinkGhostTrigger(){
+            var pinkGhostStep = Math.floor(Math.random()*4)+1;
+            if(pinkGhostStep == 1 && world[pinkGhost.y-1][pinkGhost.x] != 2){ // UP movement Red Ghost
+                pinkGhost.y--;
+            }
+            else if(pinkGhostStep == 2 && world[pinkGhost.y+1][pinkGhost.x] !=2){ // Down movement Red Ghost
+                pinkGhost.y++;
+            }
+            else if(pinkGhostStep == 3 && world[pinkGhost.y][pinkGhost.x-1] !=2){ // Left movement Red Ghost
+                pinkGhost.x--;
+                if(world[pinkGhost.y][pinkGhost.x] == world[14][-1]){ //Teleport to Left Pacman
+                    pinkGhost.y = 14;
+                    pinkGhost.x = 27;
+                }
+                
+            }
+            else if(pinkGhostStep == 4 && world[pinkGhost.y][pinkGhost.x+1] !=2){ // Rigth movement Red Ghost
+                pinkGhost.x++;
+                if(world[pinkGhost.y][pinkGhost.x] == world[14][29]){ //Teleport to Left Red Ghost
+                    pinkGhost.y = 14;
+                    pinkGhost.x = 0;
+                }
+            }
+            displayPinkGhost(); 
+           
+        }
+
+       
+        
+
+
+    </script>
+
+</body>
+
+</html>
